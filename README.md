@@ -10,4 +10,5 @@ In this lab, we'll be dissecting the routing process on Azure. We'll talk about 
 
 ## Lab architecture
 
-![RoutingWithFW]()
+![RoutingWithFW](https://github.com/Tchimwa/Routing-with-Azure-Firewall-plus-forced-tunneling/blob/main/images/RoutingWithAzFW.png)
+
