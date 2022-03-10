@@ -12,11 +12,11 @@ In this lab, we'll be dissecting the routing process on Azure. We'll talk about 
 
 ![RoutingWithFW](https://github.com/Tchimwa/Routing-with-Azure-Firewall-plus-forced-tunneling/blob/main/images/RoutingWithAzFW.png)
 
-This lab consists of 2 different environments which are Onpremises and Azure.
+This lab consists of 2 different environments which are On-premises and Azure.
 
-From the Onpremises side, we have:
+From the On-premises side, we have:
 
-- a branch reprensented by the vnet: **VNET-BR01** - **172.16.10.0/24**
+- a branch represented by the vnet: **VNET-BR01** - **172.16.10.0/24**
 - Another branch: **VNET-BR02** - **172.16.20.0/24**
 - VPN appliance Cisco CSR1000v for VNET-BRO1: **BR-01**
 - VPN appliance Cisco CSR1000v for VNET-BRO2:**BR-02**
@@ -45,12 +45,12 @@ Both vnets are connected using a global peering connection **East-to-West**.
 
 Those are the routing requirements to be implemented on the architecture during the lab session:
 
-- Communication from spokes to any destination goos through the Firewall(s)
+- Communication from spokes to any destination goes through the Firewall(s)
 - Communication between the subnets within any Hub goes through the Firewall
 - Hub to Hub will go through both firewalls
 - Hub to On-premises goes through firewall
 
-### Force tunneling 
+### Force tunneling
 
 - East spokes and Hub will go through **VPN-GW-EAST** and **BR-02** with a redundancy on **BR-01** in case of failure
 - West spokes and Hub will go through **VPN-GW-WEST** and **BR-01** with a redundancy on **BR-02** in case of failure
