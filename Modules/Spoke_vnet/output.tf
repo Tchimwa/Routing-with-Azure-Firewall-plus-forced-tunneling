@@ -1,10 +1,10 @@
 output "spokeName" {
-    value = azurerm_virtual_network.spoke.resource_group_name
+    value = azurerm_virtual_network.spoke.name
     description = "Spoke vnet's name"
 }
 
 output "spokeVMName" {
-    value = azurerm_linux_virtual_machine.spokevm.vm
+    value = azurerm_linux_virtual_machine.spokevm.name
     description = "Spoke VM.s name"  
 }
 

@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"spoke_east","Source":"./Modules/Spoke_vnet","Dir":"Modules/Spoke_vnet"},{"Key":"spoke_west","Source":"./Modules/Spoke_vnet","Dir":"Modules/Spoke_vnet"}]}

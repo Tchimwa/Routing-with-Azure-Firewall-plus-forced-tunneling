@@ -1,7 +1,9 @@
 #!/bin/bash
 # Script to deploy a very simple web application.
 # The web app has a customizable image and some text.
-
+echo "==="
+echo "Installing Apache2 web server ..."
+echo "==="
 apt -y update
 apt -y install apache2
 systemctl start apache2
@@ -15,10 +17,11 @@ cat << EOM > /var/www/html/index.html
     <center><h2>Fellow Network Engineers </h2></center>
   <center>Welcome to the LABTIME Session 3!=^._.^=</center>
   <!-- END -->
-  
-  </div>
+    </div>
   </body>
 </html>
 EOM
 
-echo "Script complete."
+echo "==="
+echo "Installation complete."
+echo "==="

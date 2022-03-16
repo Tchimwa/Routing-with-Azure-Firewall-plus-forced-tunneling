@@ -16,7 +16,7 @@ nsg01_name=$(az network nsg create --name br-01-nsg --resource-group branch-rg -
 nsg02_name=$(az network nsg create --name br-02-nsg --resource-group branch-rg --location eastus2 --query NewNSG.name)
 
 printf "\nBR-01 router's network security group is \e[33m$nsg01_name\e[0m.\n" 
-printf "BR-02 router's network security group is \e[33m$nsg02_name\e[0m.\n" 
+printf "BR-02 router's network security group is \e[33m$nsg02_name\e[0m.\n\n" 
 
 az network nsg rule create --name Allow-SSH --nsg-name br-01-nsg --resource-group branch-rg --access Allow --description "SSH Ingress Traffic Allowed" --priority 110 --protocol TCP --direction Inbound --source-address-prefixes '*' --source-port-ranges '*' --destination-address-prefixes '*' --destination-port-ranges 22 --query '{Name:name,Source:sourceAddressPrefix,PORT:destinationPortRange,Type:direction,Priority:priority}' --output table
 az network nsg rule create --name Allow-SSH --nsg-name br-02-nsg --resource-group branch-rg --access Allow --description "SSH Ingress Traffic Allowed" --priority 110 --protocol TCP --direction Inbound --source-address-prefixes '*' --source-port-ranges '*' --destination-address-prefixes '*' --destination-port-ranges 22 --output none
@@ -60,16 +60,16 @@ az vm image terms accept --urn cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 
 az network public-ip create --name br-01-pip --resource-group branch-rg --idle-timeout 30 --allocation-method Static --sku Standard --zone 1 2 3 --output none
 az network nic create --name br01Out --resource-group branch-rg --vnet-name vnet-br01 --subnet Outside --public-ip-address br-01-pip --private-ip-address 172.10.0.4 --ip-forwarding --output none
 az network nic create --name br01In --resource-group branch-rg --vnet-name vnet-br01 --subnet Inside --private-ip-address 172.10.1.4 --ip-forwarding --output none
-az vm create --resource-group branch-rg --location eastus --name br-01 --size Standard_D2_v2 --nics br01Out br01In --image cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 --public-ip-sku Standard --admin-username aznet --admin-password Networking2022# --only-show-errors
+az vm create --resource-group branch-rg --location eastus --name br-01 --size Standard_D2_v2 --nics br01Out br01In --image cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 --public-ip-sku Standard --admin-username aznet --admin-password Networking2022# --only-show-errors --output none --query '[privateIpAddress,publicIpAddress]'
 sleep 5
 pip=$(az network public-ip show --name br-01-pip --resource-group branch-rg --query ipAddress)
 br01=$(az vm show --name br-01 --resource-group branch-rg --query name)
-printf "\n\x1b[32m${br01}\x1b[0m will have \x1b[33m${pip}\x1b[0m as public IP address."
+printf "\n\x1b[32m${br01}\x1b[0m will have \x1b[33m${pip}\x1b[0m as public IP address.\n"
 
 az network public-ip create --name br-02-pip --resource-group branch-rg --location eastus2 --idle-timeout 30 --allocation-method Static --sku Standard --zone 1 2 3 --output none
 az network nic create --name br02Out --resource-group branch-rg --location eastus2 --vnet-name vnet-br02 --subnet Outside --public-ip-address br-02-pip --private-ip-address 172.20.0.4 --ip-forwarding --output none
 az network nic create --name br02In --resource-group branch-rg --location eastus2 --vnet-name vnet-br02 --subnet Inside --private-ip-address 172.20.1.4 --ip-forwarding --output none
-az vm create --resource-group branch-rg --location eastus2 --name br-02 --size Standard_D2_v2 --nics br02Out br02In --image cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 --public-ip-sku Standard --admin-username aznet --admin-password Networking2022# --only-show-errors
+az vm create --resource-group branch-rg --location eastus2 --name br-02 --size Standard_D2_v2 --nics br02Out br02In --image cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 --public-ip-sku Standard --admin-username aznet --admin-password Networking2022# --only-show-errors --query '[privateIpAddress,publicIpAddress]'
 sleep 5
 pip2=$(az network public-ip show --name br-02-pip --resource-group branch-rg --query ipAddress)
 br02=$(az vm show --name br-02 --resource-group branch-rg --query name)
@@ -77,20 +77,20 @@ printf "\n\x1b[32m${br02}\x1b[0m will have \x1b[33m${pip2}\x1b[0m as public IP a
 
 printf "\n******** Creating the Bastion ********\n" | sed -e "s/Creating the Bastion/ \x1b[32mCreating the Bastion\x1b[0m/g"
 az network public-ip create --name br01-bastion-pip --resource-group branch-rg --idle-timeout 30 --allocation-method Static --sku Standard --zone 1 2 3 --location eastus --output none
-az network bastion create --location eastus --name br01-bst --public-ip-address br01-bastion-pip --resource-group branch-rg --vnet-name vnet-br01 --only-show-errors
+az network bastion create --location eastus --name br01-bst --public-ip-address br01-bastion-pip --resource-group branch-rg --vnet-name vnet-br01 --only-show-errors --output none
 
 az network public-ip create --name br02-bastion-pip --resource-group branch-rg --idle-timeout 30 --allocation-method Static --sku Standard --zone 1 2 3 --location eastus2 --output none
-az network bastion create --location eastus2 --name br02-bst --public-ip-address br02-bastion-pip --resource-group branch-rg --vnet-name vnet-br02 --only-show-errors
+az network bastion create --location eastus2 --name br02-bst --public-ip-address br02-bastion-pip --resource-group branch-rg --vnet-name vnet-br02 --only-show-errors --output none
 
 printf "\n\x1b[32mvnet-br01\x1b[0m will have \x1b[33mbr01-bst\x1b[0m as bastion host.\n"
 printf "\x1b[32mvnet-br02\x1b[0m will have \x1b[33mbr02-bst\x1b[0m as bastion host.\n"
 
 printf "\n******** Creating the VMs ********\n" | sed -e "s/Creating the VMs/ \x1b[32mCreating the VMs\x1b[0m/g"
 az network nic create --resource-group branch-rg --name br01-vmnic --location eastus --subnet VM --private-ip-address 172.10.2.100 --vnet-name vnet-br01 --output none
-az vm create --name vm-br01 --resource-group branch-rg --location eastus --image Win2012R2Datacenter --nics br01-vmnic --admin-username aznet --admin-password Networking2022# --only-show-errors
+az vm create --name vm-br01 --resource-group branch-rg --location eastus --image Win2012R2Datacenter --nics br01-vmnic --admin-username aznet --admin-password Networking2022# --only-show-errors --output none
 
 az network nic create --resource-group branch-rg --name br02-vmnic --location eastus2 --subnet VM --private-ip-address 172.20.2.100 --vnet-name vnet-br02 --output none
-az vm create --name vm-br02 --resource-group branch-rg --location eastus2 --image Win2012R2Datacenter --nics br02-vmnic --admin-username aznet --admin-password Networking2022# --only-show-errors
+az vm create --name vm-br02 --resource-group branch-rg --location eastus2 --image Win2012R2Datacenter --nics br02-vmnic --admin-username aznet --admin-password Networking2022# --only-show-errors --output none
 
 printf "The connectivity test will be ran from the VMs below according to their respective branches:\n"
 printf "\nBranch 1: \x1b[32mvm-br01\x1b[0m - \x1b[33m172.10.2.100\x1b[0m as VM host."
