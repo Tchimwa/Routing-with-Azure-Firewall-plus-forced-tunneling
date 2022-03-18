@@ -1,37 +1,37 @@
 variable "prefix" {
-  type = string
+  type        = string
   description = "The prefix which should be used to define the region"
 }
 
-variable "spokeAppdressSpace" {
-    type = string
+variable "spokeAddressSpace" {
+  type = string
 }
 
 variable "spokePrefix" {
-    type = string
+  type = string
 }
 
 variable "spokeAddressPrefix" {
-    type = string
+  type = string
 }
 
 variable "location" {
-  type = string
+  type        = string
   description = "The Azure Region in which all resources in this example should be created."
 }
 
 variable "group" {
-    type = string
-    description = "Resource group for the cloud environment"
+  type        = string
+  description = "Resource group for the cloud environment"
 }
 
 variable "username" {
   description = "Administrator username"
-  type = string
+  type        = string
 }
 
 variable "password" {
-  type = string
+  type        = string
   description = "administrator password (recommended to disable password auth)"
 }
 
