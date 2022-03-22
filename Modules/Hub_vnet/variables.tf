@@ -37,11 +37,6 @@ variable "hubappsAddressPrefix" {
 variable "hubsrvAddressPrefix" {
   type = string
 }
-
-variable "bgpasn" {
-  type = string
-}
-
 variable "hubappsPrefix" {
   type = string
 }

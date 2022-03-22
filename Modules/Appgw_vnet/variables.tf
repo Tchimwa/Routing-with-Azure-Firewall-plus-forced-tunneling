@@ -21,6 +21,10 @@ variable "appPrefix" {
   type = string
 }
 
+variable "backendPrefix" {
+  type = string
+}
+
 variable "appAddressPrefix" {
   type = string
 }

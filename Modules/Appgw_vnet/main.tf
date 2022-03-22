@@ -43,9 +43,7 @@ resource "azurerm_subnet" "appgw" {
   resource_group_name  = var.group
   virtual_network_name = azurerm_virtual_network.app.name
   address_prefixes     = [var.appAddressPrefix]
-  depends_on = [
-    azurerm_virtual_network.app
-  ]
+
 }
 
 resource "azurerm_subnet" "backend" {
@@ -53,9 +51,7 @@ resource "azurerm_subnet" "backend" {
   resource_group_name  = var.group
   virtual_network_name = azurerm_virtual_network.app.name
   address_prefixes     = [var.backendAddressPrefix]
-  depends_on = [
-    azurerm_virtual_network.app
-  ]
+
 }
 
 resource "azurerm_application_gateway" "appgw_web" {
@@ -65,8 +61,8 @@ resource "azurerm_application_gateway" "appgw_web" {
 
 
   sku {
-    name     = "Standard_v2"
-    tier     = "Standard_v2"
+    name     = "Standard_Medium"
+    tier     = "Standard"
     capacity = 2
 
   }
@@ -104,7 +100,7 @@ resource "azurerm_application_gateway" "appgw_web" {
   http_listener {
     name                           = "http-traffic"
     frontend_ip_configuration_name = "appgw-${var.prefix}-feipconf"
-    frontend_port_name             = "http-80"
+    frontend_port_name             = "appgw-${var.prefix}-feport"
     protocol                       = "Http"
   }
 
@@ -120,31 +116,21 @@ resource "azurerm_application_gateway" "appgw_web" {
 
 resource "azurerm_network_interface" "appvmnic" {
   count               = 2
-  name                = "${var.prefix}-app0${count.index + 1}-vmnic"
+  name                = "${var.prefix}app0${count.index + 1}-vmnic"
   resource_group_name = var.group
   location            = var.location
 
   ip_configuration {
-    name                          = "${var.prefix}-app0${count.index + 1}-ipconfig"
+    name                          = "${var.prefix}app0${count.index + 1}-ipcfg"
     subnet_id                     = azurerm_subnet.backend.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "${var.appPrefix}.10${count.index + 1}"
+    private_ip_address            = "${var.backendPrefix}.10${count.index + 1}"
+    primary                       = true
 
   }
   tags = var.labtags
 }
 
-resource "azurerm_network_interface_application_gateway_backend_address_pool_association" "appgwnic-assoc" {
-  count                   = 2
-  network_interface_id    = azurerm_network_interface.appvmnic[count.index].id
-  ip_configuration_name   = "appvmni0${count.index + 1}-ipconfig"
-  backend_address_pool_id = azurerm_application_gateway.appgw_web.backend_address_pool[0].id
-}
-
-resource "azurerm_subnet_network_security_group_association" "nsg-assoc" {
-  subnet_id                 = azurerm_subnet.backend.id
-  network_security_group_id = azurerm_network_security_group.appgw_nsg.id
-}
 
 data "template_file" "web_server" {
   template = file("./scripts/webserver.sh")
@@ -159,7 +145,7 @@ resource "azurerm_linux_virtual_machine" "web" {
   admin_username                  = var.username
   admin_password                  = var.password
   disable_password_authentication = false
-  network_interface_ids           = [element(azurerm_network_interface.appvmnic.*.id, count.index + 1)]
+  network_interface_ids           = [azurerm_network_interface.appvmnic[count.index].id]
   computer_name                   = "${var.prefix}-web0${count.index + 1}"
   custom_data                     = base64encode(data.template_file.web_server.rendered)
 
@@ -177,4 +163,17 @@ resource "azurerm_linux_virtual_machine" "web" {
 
   }
   tags = var.labtags
+}
+
+resource "azurerm_network_interface_application_gateway_backend_address_pool_association" "appgwnic-assoc" {
+  count                   = 2
+  network_interface_id    = azurerm_network_interface.appvmnic[count.index].id
+  ip_configuration_name   = "${var.prefix}app0${count.index + 1}-ipcfg"
+  backend_address_pool_id = azurerm_application_gateway.appgw_web.backend_address_pool[0].id
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg-assoc" {
+
+  subnet_id                 = azurerm_subnet.backend.id
+  network_security_group_id = azurerm_network_security_group.appgw_nsg.id
 }

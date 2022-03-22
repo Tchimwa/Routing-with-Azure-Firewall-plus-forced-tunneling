@@ -1,10 +1,14 @@
+variable "alias" {
+  type = string
+}
+
 variable "Peered_loc" {
   type    = string
-  default = "westus"
+  default = "centralus"
 }
 variable "Prefix" {
   type        = list(string)
-  default     = ["westus", "eastus"]
+  default     = ["centralus", "eastus"]
   description = "The prefix which should be used for all resources in this example"
 }
 
@@ -32,6 +36,11 @@ variable "AppPrefix" {
   default = ["10.110.0", "10.210.0"]
 }
 
+variable "BackendPrefix" {
+  type    = list(string)
+  default = ["10.110.1", "10.210.1"]
+}
+
 variable "AppAddressPrefix" {
   type    = list(string)
   default = ["10.110.0.0/24", "10.210.0.0/24"]
@@ -43,52 +52,52 @@ variable "BackendAddressPrefix" {
 }
 
 variable "HubAddressSpace" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.0.0/16", "10.200.0.0/16"]
 }
 
 variable "HubgwAddressPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.0.0/24", "10.200.0.0/24"]
 }
 
 variable "HubbstAddressPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.1.0/24", "10.200.1.0/24"]
 }
 
 variable "HubfwAddressPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.2.0/24", "10.200.2.0/24"]
 }
 
 variable "HubfwmgmtAddressPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.3.0/24", "10.200.3.0/24"]
 }
 
 variable "HubappsAddressPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.4.0/24", "10.200.4.0/24"]
 }
 
 variable "HubsrvAddressPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.5.0/24", "10.200.5.0/24"]
 }
 
 variable "BgpAsn" {
-  type = list(string)
+  type    = list(string)
   default = ["65010", "65020"]
 }
 
 variable "HubappsPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.4", "10.200.4"]
 }
 
 variable "HubsrvPrefix" {
-  type = list(string)
+  type    = list(string)
   default = ["10.100.5", "10.200.5"]
 }
 
