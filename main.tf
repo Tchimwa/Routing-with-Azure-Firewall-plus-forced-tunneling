@@ -104,8 +104,6 @@ module "vpngw-centralus" {
 }
 
 
-
-
 module "Appgw_central" {
   source               = "./Modules/Appgw_vnet"
   group                = azurerm_resource_group.main.name
