@@ -10,7 +10,7 @@ In this lab, we'll be dissecting the routing process on Azure. We'll talk about 
 
 ## Lab architecture
 
-![RoutingWithFW](https://github.com/Tchimwa/Routing-with-Azure-Firewall-plus-forced-tunneling/blob/main/images/RoutingWithAzFW.png)
+![RoutingWithFW](https://github.com/Tchimwa/Routing-with-Azure-Firewall-plus-forced-tunneling/blob/main/images/Labtime3_Architecture.png)
 
 This lab consists of 2 different environments which are On-premises and Azure.
 
