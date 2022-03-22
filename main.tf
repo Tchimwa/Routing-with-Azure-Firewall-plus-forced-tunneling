@@ -164,6 +164,11 @@ module "hub_peering" {
   group = azurerm_resource_group.main.name
   vnet01 = module.Hub_centralus.hubvnet_name
   vnet02 = module.Hub_east.hubvnet_name
+
+  depends_on = [
+    module.Hub_centralus,
+    module.Hub_east,
+  ]
 }
 
 module "eastappgw_peering" {
@@ -171,13 +176,23 @@ module "eastappgw_peering" {
   group = azurerm_resource_group.main.name
   vnet01 = module.Hub_east.hubvnet_name
   vnet02 = module.Appgw_east.app_vnet
+
+  depends_on = [
+    module.Hub_east,
+    module.Appgw_east,
+  ]
 }
 
 module "eastspoke_peering" {
   source = "./Modules/peering"
   group = azurerm_resource_group.main.name
-  vnet01 = module.Hub_centralus.hubvnet_name
+  vnet01 = module.Hub_east.hubvnet_name
   vnet02 = module.spoke_east.spokeName
+
+  depends_on = [
+    module.Hub_east,
+    module.spoke_east,
+  ]
 }
 
 module "centralappgw_peering" {
@@ -185,6 +200,11 @@ module "centralappgw_peering" {
   group = azurerm_resource_group.main.name
   vnet01 = module.Hub_centralus.hubvnet_name
   vnet02 = module.Appgw_central.app_vnet
+
+  depends_on = [
+    module.Hub_centralus,
+    module.Appgw_central,
+  ]
 }
 
 module "centralspoke_peering" {
@@ -192,4 +212,9 @@ module "centralspoke_peering" {
   group = azurerm_resource_group.main.name
   vnet01 = module.Hub_centralus.hubvnet_name
   vnet02 = module.spoke_central.spokeName
+
+  depends_on = [
+    module.Hub_centralus,
+    module.spoke_central,
+  ]
 }
