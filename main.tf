@@ -90,7 +90,7 @@ module "vpngw-eastus" {
   bgpasn               = var.BgpAsn[1]
   labtags              = azurerm_resource_group.main.tags  
   
-  depends_on = [module.Hub_east]
+  depends_on = [module.fw-east]
 }
 module "vpngw-centralus" {
   source               = "./Modules/vpngw"
@@ -100,7 +100,7 @@ module "vpngw-centralus" {
   bgpasn               = var.BgpAsn[0]
   labtags              = azurerm_resource_group.main.tags  
   
-  depends_on = [module.Hub_centralus]
+  depends_on = [module.fw-centralus]
 }
 
 
@@ -117,7 +117,10 @@ module "Appgw_central" {
   username             = var.Username
   password             = var.Password
   labtags              = azurerm_resource_group.main.tags
+
+  depends_on = [module.vpngw-centralus]
 }
+
 module "Appgw_east" {
   source               = "./Modules/Appgw_vnet"
   group                = azurerm_resource_group.main.name
@@ -131,6 +134,8 @@ module "Appgw_east" {
   username             = var.Username
   password             = var.Password
   labtags              = azurerm_resource_group.main.tags
+
+  depends_on = [module.vpngw-eastus]
 }
 
 module "spoke_east" {

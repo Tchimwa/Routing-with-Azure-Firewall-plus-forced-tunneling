@@ -31,13 +31,13 @@ From Azure:
 - BGP attributes for VPN-GW-EAST: **ASN:65020**
 - Two spokes: **VNET-EAST-01 - 10.210.0.0/16** and **VNET-EAST-02 - 10.220.0.0/16**.
 
-- West Hub Vnet: **VNET-WEST** - **10.200.0.0/16**
-- West Hub VPN Gateway: **VPN-GW-WEST**
-- West Hub Azure Firewall : **FW-WEST**
-- BGP attributes for VPN-GW-WEST: **ASN:65010**
-- Two spokes: **VNET-WEST-01 - 10.110.0.0/16** and **VNET-WEST-02 - 10.120.0.0/16**.
+- CENTRAL Hub Vnet: **VNET-CENTRAL** - **10.200.0.0/16**
+- CENTRAL Hub VPN Gateway: **VPN-GW-CENTRAL**
+- CENTRAL Hub Azure Firewall : **FW-CENTRAL**
+- BGP attributes for VPN-GW-CENTRAL: **ASN:65010**
+- Two spokes: **VNET-CENTRAL-01 - 10.110.0.0/16** and **VNET-CENTRAL-02 - 10.120.0.0/16**.
 
-Both vnets are connected using a global peering connection **East-to-West**.
+Both vnets are connected using a global peering connection **East-to-CENTRAL**.
 
 ## Lab requirements
 
@@ -52,7 +52,7 @@ Those are the routing requirements to be implemented on the architecture during 
 
 ### Force tunneling
 
-- East spokes and Hub will go through **VPN-GW-EAST** and **BR-02** with a redundancy on **BR-01** in case of failure
-- West spokes and Hub will go through **VPN-GW-WEST** and **BR-01** with a redundancy on **BR-02** in case of failure
+- East-US spokes and Hub will go through **VPN-GW-EAST** and **BR-02** with a redundancy on **BR-01** in case of failure
+- Central-US spokes and Hub will go through **VPN-GW-CENTRAL** and **BR-01** with a redundancy on **BR-02** in case of failure
 
 

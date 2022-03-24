@@ -6,7 +6,7 @@ data "azurerm_subnet" "vpngw-sbnt" {
 }
 
 resource "azurerm_public_ip" "vpngw-pip" {
-  name                = "vpn-gw-${var.prefix}"
+  name                = "vpngw-${var.prefix}-pip"
   location            = var.location
   resource_group_name = var.group
   allocation_method   = "Dynamic"

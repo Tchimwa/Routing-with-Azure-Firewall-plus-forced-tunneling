@@ -29,6 +29,17 @@ resource "azurerm_network_security_group" "appgw_nsg" {
   tags = var.labtags
 }
 
+resource "azurerm_public_ip" "appgw-pip" {
+  name = "appgw-${var.prefix}-pip"
+  allocation_method = "Static"
+  sku                 = "Standard"
+  resource_group_name = var.group
+  location = var.location
+
+  tags = var.labtags
+  
+}
+
 resource "azurerm_virtual_network" "app" {
   name                = "vnet-${var.prefix}-01"
   address_space       = [var.appAddressSpace]
@@ -61,8 +72,8 @@ resource "azurerm_application_gateway" "appgw_web" {
 
 
   sku {
-    name     = "Standard_Medium"
-    tier     = "Standard"
+    name     = "Standard_v2"
+    tier     = "Standard_v2"
     capacity = 2
 
   }
@@ -75,6 +86,11 @@ resource "azurerm_application_gateway" "appgw_web" {
   frontend_port {
     name = "appgw-${var.prefix}-feport"
     port = 80
+  }
+
+  frontend_ip_configuration {
+    name = "appgw-${var.prefix}-ipconf"
+    public_ip_address_id = azurerm_public_ip.appgw-pip.id
   }
 
   frontend_ip_configuration {
