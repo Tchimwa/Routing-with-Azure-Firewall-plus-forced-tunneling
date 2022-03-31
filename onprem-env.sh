@@ -2,7 +2,7 @@
 #This has to be ran after deploying the cloud environment. 
 #There are some values used here that will be coming from the cloud resources environment like the BGP values for the IPsec connections
 
-printf "\n\n=========== On-premises environment Deployment==========\n" | sed -e "s/On-premises environment Deployment/ \x1b[36mOn-premises environment Deployment\x1b[0m/g"
+printf "\n\n=========== On-premises environment Deployment==========\n" | sed -e "s/On-premises environment Deployment/ \x1b[32mOn-premises environment Deployment\x1b[0m/g"
 printf "\n******** Resource Group ********\n" | sed -e "s/Resource Group/ \x1b[32mResource Group\x1b[0m/g"
 sleep 5
 
@@ -60,7 +60,7 @@ az vm image terms accept --urn cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 
 az network public-ip create --name br-01-pip --resource-group branch-rg --idle-timeout 30 --allocation-method Static --sku Standard --zone 1 2 3 --output none
 az network nic create --name br01Out --resource-group branch-rg --vnet-name vnet-br01 --subnet Outside --public-ip-address br-01-pip --private-ip-address 172.10.0.4 --ip-forwarding --output none
 az network nic create --name br01In --resource-group branch-rg --vnet-name vnet-br01 --subnet Inside --private-ip-address 172.10.1.4 --ip-forwarding --output none
-az vm create --resource-group branch-rg --location eastus --name br-01 --size Standard_D2_v2 --nics br01Out br01In --image cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 --public-ip-sku Standard --admin-username aznet --admin-password Networking2022# --only-show-errors --output none --query '[privateIpAddress,publicIpAddress]'
+az vm create --resource-group branch-rg --location eastus --name br-01 --size Standard_D2_v2 --nics br01Out br01In --image cisco:cisco-csr-1000v:17_3_3-byol:17.3.320210317 --public-ip-sku Standard --admin-username aznet --admin-password Networking2022# --only-show-errors --query '[privateIpAddress,publicIpAddress]'
 sleep 5
 pip=$(az network public-ip show --name br-01-pip --resource-group branch-rg --query ipAddress)
 br01=$(az vm show --name br-01 --resource-group branch-rg --query name)
@@ -119,8 +119,8 @@ az network vnet subnet update --name VM --vnet-name vnet-br02 --resource-group b
 
 printf "\nThe routing tables \x1b[33mbr01-rt\x1b[0m and \x1b[33mbr02-rt\x1b[0m have been configured for their different branches.\n"
 
-#printf  "\n******** Gathering the data for the IPSec tunnels ********\n\n" | sed -e "s/Gathering the data for the IPSec tunnels / \x1b[32mGathering the data for the IPSec tunnels \x1b[0m/g"
+#printf  "\n******** Gathering for the IPSec tunnels ********\n\n" | sed -e "s/Gathering the data for the IPSec tunnels / \x1b[32mGathering the data for the IPSec tunnels \x1b[0m/g"
 
-#az network vnet-gateway list --resource-group azcloud-rg --query [].[name,bgpSettings.asn,bgpSettings.bgpPeeringAddress] -o table 
+#az network vnet-gateway list --resource-group tcs-azcloud-rg --query [].[name,bgpSettings.asn,bgpSettings.bgpPeeringAddress] --output table
 
-printf  "\n\x1b[32mHave a great lab and I hope you learn something out of it ...\x1b[0m/g"
+printf "\n\n=========== Have a great lab and I hope you learn something out of it ...==========\n" | sed -e "s/Have a great lab and I hope you learn something out of it .../ \x1b[36mHave a great lab and I hope you learn something out of it ...\x1b[0m/g"
